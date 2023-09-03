@@ -15,14 +15,23 @@ class RutaGenerator:
             return ruta_data["puntos"]
 
     def generate_route(self):
+        waypoints_string = ""
+        n = 0
         ruta_points = self.load_ruta_points()
-        waypoints = [
-            f"{point[0]},{point['longitude']}" for point in ruta_points]
-        waypoints_string = ";".join(waypoints)
+        for punto in ruta_points:
+            # print(punto[0])
+            waypoints_string += f"{punto[0]},{punto[1]};"
+            '''waypoints = [
+            f"{point['latitude']},{point['longitude']}" for point in ruta_points]'''
+            n = n+1
+            if n == 2:
+                break
 
         # Realiza una solicitud a la API de OpenStreetMap para generar la ruta
         url = f"http://router.project-osrm.org/route/v1/driving/{waypoints_string}"
+        print(url[:-1])
         response = requests.get(url)
+        print(response)
         if response.status_code == 200:
             route_data = response.json()
             return route_data
